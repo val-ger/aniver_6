@@ -19,10 +19,18 @@ function iniciarMotorJuego(nivel) {
         // ---------------------------
         scene("intro1", () => {
 
-            // aviso horizontal
+            // 👉 detectar giro de pantalla
+            onResize(() => {
+                go("intro1");
+            });
+
+            // aviso si está vertical
             if (height() > width()) {
 
-                add([rect(width(), height()), color(0, 0, 0)]);
+                add([
+                    rect(width(), height()),
+                    color(0, 0, 0)
+                ]);
 
                 add([
                     text("Gira tu celular\n\nPon la pantalla en horizontal\npara jugar mejor", {
@@ -35,13 +43,14 @@ function iniciarMotorJuego(nivel) {
                 ]);
 
                 add([
-                    text("Luego presiona ESPACIO", { size: 12 }),
+                    text("Toca la pantalla cuando lo gires", { size: 12 }),
                     pos(width() / 2, height() - 40),
                     anchor("center"),
                     opacity(0.6)
                 ]);
 
-                onKeyPress("space", () => {
+                // tocar pantalla
+                onClick(() => {
                     go("intro1");
                 });
 
@@ -59,7 +68,10 @@ function iniciarMotorJuego(nivel) {
 
             let i = 0;
 
-            add([rect(width(), height()), color(0, 0, 0)]);
+            add([
+                rect(width(), height()),
+                color(0, 0, 0)
+            ]);
 
             const texto = add([
                 text(historia[i], {
@@ -72,13 +84,13 @@ function iniciarMotorJuego(nivel) {
             ]);
 
             add([
-                text("Toca ESPACIO para continuar", { size: 12 }),
+                text("Toca la pantalla para continuar", { size: 12 }),
                 pos(width() / 2, height() - 40),
                 anchor("center"),
                 opacity(0.6)
             ]);
 
-            onKeyPress("space", () => {
+            onClick(() => {
                 i++;
                 if (i < historia.length) {
                     texto.text = historia[i];
@@ -94,7 +106,6 @@ function iniciarMotorJuego(nivel) {
         // ---------------------------
         scene("nivel1", () => {
 
-            // fondo
             add([
                 sprite("instituto"),
                 pos(0, 0),
@@ -102,7 +113,7 @@ function iniciarMotorJuego(nivel) {
                 fixed()
             ]);
 
-            // barra progreso
+            // barra superior
             add([
                 rect(width(), 32),
                 pos(0, 0),
@@ -132,71 +143,48 @@ function iniciarMotorJuego(nivel) {
                 "valery"
             ]);
 
-            // ✨ brillo suave en Valery
-            let brillo = 0;
-
-            valery.onUpdate(() => {
-                brillo += dt();
-                const s = 1.4 + Math.sin(brillo * 4) * 0.05;
-                valery.scale = vec2(s, s);
-            });
-
-            // -------- CONTROLES TECLADO
-            const speed = 140;
+            const speed = 150;
             let puedeMover = false;
 
-            onKeyDown("left", () => puedeMover && dani.move(-speed, 0));
-            onKeyDown("right", () => puedeMover && dani.move(speed, 0));
-            onKeyDown("up", () => puedeMover && dani.move(0, -speed));
-            onKeyDown("down", () => puedeMover && dani.move(0, speed));
+            let mover = { x: 0, y: 0 };
 
-            // -------- BOTONES TÁCTILES
-            const sizeBtn = 48;
-            const margen = 12;
-
-            function boton(x, y, txt) {
-
-                const b = add([
-                    rect(sizeBtn, sizeBtn, { radius: 10 }),
-                    pos(x, y),
-                    area(),
-                    fixed(),
-                    color(255, 255, 255),
-                    opacity(0.25)
-                ]);
-
-                add([
-                    text(txt, { size: 20 }),
-                    pos(x + sizeBtn / 2, y + sizeBtn / 2),
-                    anchor("center"),
-                    fixed()
-                ]);
-
-                return b;
-            }
-
-            const leftBtn  = boton(margen, height() - sizeBtn * 2 - margen * 2, "◀");
-            const rightBtn = boton(margen + sizeBtn + 8, height() - sizeBtn * 2 - margen * 2, "▶");
-            const upBtn    = boton(width() - sizeBtn * 2 - margen * 2, height() - sizeBtn * 2 - margen * 2, "▲");
-            const downBtn  = boton(width() - sizeBtn - margen, height() - sizeBtn * 2 - margen * 2, "▼");
-
-            leftBtn.onUpdate(() => {
-                if (leftBtn.isHovering() && puedeMover) dani.move(-speed, 0);
+            // 👉 controles por toque (lado de pantalla)
+            onUpdate(() => {
+                if (!puedeMover) return;
+                dani.move(mover.x * speed, mover.y * speed);
             });
 
-            rightBtn.onUpdate(() => {
-                if (rightBtn.isHovering() && puedeMover) dani.move(speed, 0);
+            onTouchStart((p) => {
+
+                if (!puedeMover) return;
+
+                if (p.pos.x < width() / 3) {
+                    mover.x = -1;
+                    mover.y = 0;
+                }
+                else if (p.pos.x > width() * 2 / 3) {
+                    mover.x = 1;
+                    mover.y = 0;
+                }
+                else if (p.pos.y < height() / 2) {
+                    mover.y = -1;
+                    mover.x = 0;
+                }
+                else {
+                    mover.y = 1;
+                    mover.x = 0;
+                }
             });
 
-            upBtn.onUpdate(() => {
-                if (upBtn.isHovering() && puedeMover) dani.move(0, -speed);
+            onTouchEnd(() => {
+                mover.x = 0;
+                mover.y = 0;
             });
 
-            downBtn.onUpdate(() => {
-                if (downBtn.isHovering() && puedeMover) dani.move(0, speed);
-            });
+            // -----------------
+            // narración inicial
+            // -----------------
 
-            // -------- narración inicial
             const dialogosInicio = [
                 "Daniel pensaba: ¿Ella está mirándome...?",
                 "Es hermosa...",
@@ -221,15 +209,15 @@ function iniciarMotorJuego(nivel) {
             ]);
 
             add([
-                text("ESPACIO", { size: 10 }),
-                pos(width() - 60, height() - 30),
+                text("Toca para continuar", { size: 10 }),
+                pos(width() - 110, height() - 30),
                 fixed(),
                 opacity(0.5)
             ]);
 
-            onKeyPress("space", () => {
-                di++;
-                if (di < dialogosInicio.length) {
+            onClick(() => {
+                if (di < dialogosInicio.length - 1) {
+                    di++;
                     texto.text = dialogosInicio[di];
                 } else {
                     destroy(caja);
@@ -238,7 +226,10 @@ function iniciarMotorJuego(nivel) {
                 }
             });
 
-            // -------- encuentro con Valery
+            // -----------------
+            // encuentro con Valery
+            // -----------------
+
             let yaHablo = false;
 
             dani.onCollide("valery", () => {
@@ -246,6 +237,13 @@ function iniciarMotorJuego(nivel) {
                 if (yaHablo) return;
                 yaHablo = true;
                 puedeMover = false;
+
+                // ✨ pequeño brillo
+                valery.use(opacity(1));
+
+                loop(0.3, () => {
+                    valery.opacity = valery.opacity === 1 ? 0.6 : 1;
+                });
 
                 const dialogos = [
                     "Daniel: Hola... soy Daniel.",
@@ -270,33 +268,21 @@ function iniciarMotorJuego(nivel) {
                     fixed()
                 ]);
 
-                onKeyPress("space", () => {
+                onClick(() => {
                     i2++;
                     if (i2 < dialogos.length) {
                         t2.text = dialogos[i2];
                     } else {
 
-                        // botón siguiente nivel
-                        const b = add([
-                            rect(200, 44, { radius: 12 }),
-                            pos(width() / 2, height() / 2),
-                            anchor("center"),
-                            area(),
-                            fixed(),
-                            color(255, 100, 160)
-                        ]);
-
                         add([
-                            text("Siguiente nivel ▶", { size: 14 }),
-                            pos(b.pos),
-                            anchor("center"),
-                            fixed()
+                            text("Nivel completado 💖\nPróximo nivel muy pronto", {
+                                size: 16,
+                                align: "center",
+                                width: width() - 40
+                            }),
+                            pos(width() / 2, height() / 2),
+                            anchor("center")
                         ]);
-
-                        b.onClick(() => {
-                            // aquí luego pondrás nivel 2
-                            // go("intro2");
-                        });
 
                     }
                 });
