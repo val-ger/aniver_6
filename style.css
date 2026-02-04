@@ -1,0 +1,231 @@
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    color:white;
+}
+
+/* fondo general corazones */
+
+.heart-bg{
+    position:fixed;
+    inset:0;
+    background:radial-gradient(circle,#2b102b 0%,#130014 100%);
+    z-index:1;
+    overflow:hidden;
+}
+
+/* corazones */
+
+.floating-heart{
+    position:absolute;
+    top:110vh;
+    opacity:.6;
+    font-size:18px;
+    animation:moveUp 6s linear forwards;
+}
+
+@keyframes moveUp{
+    to{
+        top:-10vh;
+        transform:translateX(40px) rotate(20deg);
+    }
+}
+
+/* pantallas */
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+    transition:opacity .5s ease;
+}
+
+/* ---------------- PORTADA ---------------- */
+
+#portada{
+    background-image:
+        linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.7)),
+        url("assets/fondo_instituto.png");
+    background-size:cover;
+    background-position:center;
+}
+
+.card-portada{
+    width:90%;
+    max-width:380px;
+    padding:30px 25px;
+    border-radius:25px;
+    background:rgba(20,5,25,.75);
+    backdrop-filter:blur(6px);
+    text-align:center;
+    box-shadow:0 0 40px rgba(255,77,109,.25);
+}
+
+.card-portada h1{
+    margin:10px 0;
+    color:#ff4d6d;
+    font-size:2.4rem;
+    text-shadow:0 0 18px rgba(255,77,109,.8);
+}
+
+.dedicatoria{
+    margin:0;
+    font-size:.9rem;
+    color:#ffb3c1;
+    letter-spacing:1px;
+}
+
+.frase{
+    margin:18px 0;
+    line-height:1.5;
+    color:#ffe3ea;
+}
+
+.fecha{
+    font-size:.9rem;
+    opacity:.8;
+}
+
+/* boton */
+
+.btn-start{
+    margin-top:20px;
+    padding:14px 40px;
+    font-size:1.1rem;
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 6px 0 #a30022;
+}
+
+.btn-start:active{
+    transform:translateY(3px);
+    box-shadow:0 3px 0 #a30022;
+}
+
+/* ---------------- MAPA ---------------- */
+
+#mapa{
+    display:none;
+    background-image:
+        linear-gradient(rgba(5,5,30,.65),rgba(5,5,40,.85)),
+        url("assets/fondo_luna.png");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    padding:25px 10px;
+    justify-content:flex-start;
+}
+
+/* CENTRAR la línea */
+.path-horizontal{
+    margin-top:auto;
+    margin-bottom:auto;
+}
+
+/* titulo */
+
+.map-title{
+    margin:10px 0 25px;
+    font-size:2rem;
+    text-shadow:0 0 10px rgba(255,255,255,.4);
+}
+
+/* camino horizontal */
+
+.path-horizontal{
+    width:100%;
+    max-width:900px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:18px;
+    overflow-x:auto;
+    padding:20px 15px 60px;
+}
+
+/* piedras */
+
+.rock{
+    min-width:30px;
+    height:6px;
+    background:rgba(255,255,255,.25);
+    border-radius:10px;
+}
+
+/* botones nivel */
+
+.nivel-btn{
+    min-width:78px;
+    height:78px;
+    border-radius:20px;
+    border:none;
+    background:#ffffff;
+    color:#333;
+    font-size:1.5rem;
+    font-weight:bold;
+    cursor:pointer;
+    position:relative;
+    box-shadow:0 6px 0 #bdbdbd;
+    flex-shrink:0;
+}
+
+.nivel-btn.active{
+    background:#ff4d6d;
+    color:white;
+    box-shadow:0 6px 0 #a30022;
+}
+
+.nivel-btn:active:not(.bloqueado){
+    transform:translateY(3px);
+    box-shadow:0 3px 0 #999;
+}
+
+/* bloqueados */
+
+.bloqueado{
+    background:#555 !important;
+    color:#999 !important;
+    box-shadow:0 6px 0 #222 !important;
+    cursor:not-allowed;
+    opacity:.9;
+}
+
+/* etiquetas */
+
+.lbl{
+    position:absolute;
+    bottom:-28px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:.7rem;
+    background:rgba(0,0,0,.7);
+    padding:3px 10px;
+    border-radius:12px;
+    white-space:nowrap;
+}
+
+canvas{
+    position: absolute;
+    z-index: 5;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    image-rendering: pixelated;
+}

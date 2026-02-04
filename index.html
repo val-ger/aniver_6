@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 4th Quest – 6 meses</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="heart-container" class="heart-bg"></div>
+
+<!-- PORTADA -->
+<section id="portada" class="screen">
+
+    <div class="card-portada">
+        <p class="dedicatoria">Para Daniel</p>
+        <h1>The 4th Quest</h1>
+        <p class="frase">
+            Todo empezó con una mirada…<br>
+            y hoy seguimos eligiéndonos.
+        </p>
+        <p class="fecha">29·03·2024 — 6 meses juntos</p>
+
+        <button class="btn-start" onclick="mostrarMapa()">Comenzar 💖</button>
+    </div>
+
+</section>
+
+
+<!-- MAPA -->
+<section id="mapa" class="screen" style="display:none;">
+
+    <h2 class="map-title">Nuestra historia</h2>
+
+    <div class="path-horizontal">
+
+        <button class="nivel-btn active" onclick="iniciarNivel(1)">
+            1 <span class="lbl">Instituto</span>
+        </button>
+
+        <div class="rock"></div>
+
+        <button class="nivel-btn bloqueado">
+            2 <span class="lbl">WhatsApp</span>
+        </button>
+
+        <div class="rock"></div>
+
+        <button class="nivel-btn bloqueado">
+            3 <span class="lbl">Primer beso</span>
+        </button>
+
+        <div class="rock"></div>
+
+        <button class="nivel-btn bloqueado">
+            4 <span class="lbl">Nuestra cita</span>
+        </button>
+
+        <div class="rock"></div>
+
+        <button class="nivel-btn bloqueado">
+            5 <span class="lbl">6 meses</span>
+        </button>
+
+        <div class="rock"></div>
+
+        <button class="nivel-btn bloqueado">
+            6 <span class="lbl">Nuestro futuro</span>
+        </button>
+
+    </div>
+
+</section>
+
+
+<script src="https://unpkg.com/kaboom@3000.1.17/dist/kaboom.js"></script>
+<script src="nivel1.js"></script>
+
+<script>
+
+function mostrarMapa() {
+    const portada = document.getElementById("portada");
+
+    portada.style.opacity = "0";
+
+    setTimeout(() => {
+        portada.style.display = "none";
+        document.getElementById("mapa").style.display = "flex";
+    }, 500);
+}
+
+function iniciarNivel(num) {
+
+    // ocultamos el mapa
+    document.getElementById("mapa").style.display = "none";
+
+    // ocultamos el fondo de corazones cuando empieza el juego
+    const hearts = document.getElementById("heart-container");
+    if (hearts) hearts.style.display = "none";
+
+    if (typeof iniciarMotorJuego === "function") {
+        iniciarMotorJuego(num);
+    }
+}
+
+/* corazones */
+
+function spawnHeart() {
+
+    const container = document.getElementById("heart-container");
+    if (!container || container.style.display === "none") return;
+
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.className = "floating-heart";
+    heart.style.left = Math.random() * 100 + "vw";
+    container.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(spawnHeart, 450);
+
+</script>
+
+</body>
+</html>
